@@ -12,7 +12,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-
 class RetrofitViewModel: ViewModel() {
 
     private var _mutableLiveData = MutableLiveData<List<RetroDataClass>>()
@@ -36,4 +35,5 @@ class RetrofitViewModel: ViewModel() {
                 }
             })
     }
+
 }

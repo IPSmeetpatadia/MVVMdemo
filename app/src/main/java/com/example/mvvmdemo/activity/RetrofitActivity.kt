@@ -11,8 +11,8 @@ import com.example.mvvmdemo.viewmodel.RetrofitViewModel
 
 class RetrofitActivity : AppCompatActivity() {
 
-    lateinit var viewModel: RetrofitViewModel
-    lateinit var recyclerView: RecyclerView
+    private lateinit var viewModel: RetrofitViewModel
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
