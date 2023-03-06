@@ -11,12 +11,12 @@ import com.example.mvvmdemo.R
 import com.example.mvvmdemo.dataclass.Note
 import com.example.mvvmdemo.viewmodel.NoteViewModel
 
-class NoteAdapter(val context: Context, val noteList: List<Note>, val viewModel: NoteViewModel): RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
+class NoteAdapter(private val context: Context, private val noteList: List<Note>, private val viewModel: NoteViewModel): RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
 
     inner class NoteViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.txt_item)
         val delete: ImageButton = itemView.findViewById(R.id.imgB_item)
-
+        /*
         fun display(note: Note) {
             title.text = note.title
             delete.setOnClickListener {
@@ -24,6 +24,7 @@ class NoteAdapter(val context: Context, val noteList: List<Note>, val viewModel:
                 notifyItemRemoved(noteList.indexOf(note))
             }
         }
+        */
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -36,7 +37,14 @@ class NoteAdapter(val context: Context, val noteList: List<Note>, val viewModel:
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        holder.display(noteList[position])
+//        holder.display(noteList[position])
+        holder.apply {
+            title.text = noteList[position].title
+            delete.setOnClickListener {
+                viewModel.remove(noteList[position])
+                notifyItemRemoved(position)
+            }
+        }
     }
 
 }

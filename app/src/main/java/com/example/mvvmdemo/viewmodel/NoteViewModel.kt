@@ -7,7 +7,7 @@ import com.example.mvvmdemo.dataclass.Note
 class NoteViewModel: ViewModel() {
 
     var list = MutableLiveData<ArrayList<Note>>()
-    val newList = arrayListOf<Note>()
+    private val newList = arrayListOf<Note>()
 
     fun add(note: Note) {
         newList.add(note)

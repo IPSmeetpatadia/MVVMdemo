@@ -11,17 +11,22 @@ import com.example.mvvmdemo.R
 import com.example.mvvmdemo.adapter.NoteAdapter
 import com.example.mvvmdemo.dataclass.Note
 import com.example.mvvmdemo.viewmodel.NoteViewModel
+import com.example.mvvmdemo.viewmodel.ViewModelFactory
 
 class NoteActivity : AppCompatActivity() {
 
-    lateinit var viewModel: NoteViewModel
-    lateinit var recyclerView: RecyclerView
+    private lateinit var viewModel: NoteViewModel
+    private lateinit var edittext: EditText
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_note)
 
-        viewModel = ViewModelProvider(this)[NoteViewModel::class.java]
+        val viewModelFactory = ViewModelFactory()
+        viewModel = ViewModelProvider(this, viewModelFactory)[NoteViewModel::class.java]
+
+        edittext = findViewById(R.id.edtxt_note)
 
         recyclerView = findViewById(R.id.recyclerView_note)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -36,9 +41,7 @@ class NoteActivity : AppCompatActivity() {
     }
 
     private fun addNote() {
-        val edittext = findViewById<EditText>(R.id.edtxt_note)
-
-        var note = Note(edittext.text.toString())
+        val note = Note(edittext.text.toString())
         viewModel.add(note)
         edittext.text.clear()
         recyclerView.adapter?.notifyDataSetChanged()
