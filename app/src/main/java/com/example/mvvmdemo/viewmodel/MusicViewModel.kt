@@ -31,7 +31,6 @@ class MusicViewModel : ViewModel() {
     fun stopMusic() {
         mediaPlayer.stop()
         mediaPlayer.reset()
-//        handler.removeCallbacks(runnable)
     }
 
     private fun convertToMinute(duration: Int): String {

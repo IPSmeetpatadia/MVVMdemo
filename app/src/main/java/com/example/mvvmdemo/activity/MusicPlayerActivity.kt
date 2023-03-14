@@ -17,14 +17,15 @@ class MusicPlayerActivity : AppCompatActivity() {
     private var isStop: Boolean = false
 
     private lateinit var viewModel: MusicViewModel
-    lateinit var runnable: Runnable
-    var handler: Handler = Handler()
+    private lateinit var runnable: Runnable
+    private var handler: Handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_music_player)
 
         viewModel = ViewModelProvider(this)[MusicViewModel::class.java]
+
         viewModel._musicTiming.observe(this) {
             music_total_time.text = it.toString()
         }
@@ -73,22 +74,20 @@ class MusicPlayerActivity : AppCompatActivity() {
         }
 
         music_seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
-                    viewModel.getMediaPlayer().seekTo(progress)
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                if (p2) {
+                    viewModel.getMediaPlayer().seekTo(p1 * 1000)
                 }
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+                TODO("Not yet implemented")
             }
 
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                viewModel.getMediaPlayer().seekTo(seekBar?.progress ?: 0)
-                viewModel.getMediaPlayer().start()
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+                TODO("Not yet implemented")
             }
         })
-
     }
 
     private fun initializeSeekBar() {
@@ -99,8 +98,9 @@ class MusicPlayerActivity : AppCompatActivity() {
 
             val currentTime = String.format("%d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes(viewModel.getMediaPlayer().currentPosition.toLong()),
-                TimeUnit.MILLISECONDS.toSeconds(viewModel.getMediaPlayer().currentPosition.toLong()) - TimeUnit.MINUTES.toSeconds(
-                    TimeUnit.MILLISECONDS.toMinutes(viewModel.getMediaPlayer().currentPosition.toLong())))
+                TimeUnit.MILLISECONDS.toSeconds(viewModel.getMediaPlayer().currentPosition.toLong()) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(viewModel.getMediaPlayer().currentPosition.toLong()))
+                )
 
             music_current_time.text = currentTime
             handler.postDelayed(runnable, 100)
@@ -109,4 +109,3 @@ class MusicPlayerActivity : AppCompatActivity() {
     }
 
 }
-
