@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.MusicPlayerActivity"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/baseline_music_note_24"/>
+
+    <TextView
+        android:id="@+id/music_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Music Name"
+        android:textStyle="italic"
+        android:layout_marginTop="10dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp">
+
+        <TextView
+            android:id="@+id/music_current_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="current_time"
+            android:layout_alignStart="@id/music_seekbar"/>
+
+        <TextView
+            android:id="@+id/music_total_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="total_time"
+            android:layout_alignEnd="@id/music_seekbar"/>
+
+        <SeekBar
+            android:id="@+id/music_seekbar"
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/music_current_time"
+            android:layout_marginTop="3dp"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <ImageButton
+            android:id="@+id/music_play_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_play_arrow_24"/>
+
+        <ImageButton
+            android:id="@+id/music_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_stop_24"/>
+
+    </LinearLayout>
+
+</LinearLayout>
