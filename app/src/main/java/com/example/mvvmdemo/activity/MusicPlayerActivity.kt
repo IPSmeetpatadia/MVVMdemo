@@ -76,16 +76,17 @@ class MusicPlayerActivity : AppCompatActivity() {
         music_seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                 if (p2) {
-                    viewModel.getMediaPlayer().seekTo(p1 * 1000)
+                    viewModel.getMediaPlayer().seekTo(p1)
                 }
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
-                TODO("Not yet implemented")
+                viewModel.getMediaPlayer().pause()
             }
 
             override fun onStopTrackingTouch(p0: SeekBar?) {
-                TODO("Not yet implemented")
+                p0?.progress = viewModel.getMediaPlayer().currentPosition
+                viewModel.getMediaPlayer().start()
             }
         })
     }
