@@ -1,24 +1,26 @@
 package com.example.mvvmdemo.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.widget.SeekBar
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mvvmdemo.R
+import com.example.mvvmdemo.adapter.MusicQueueAdapter
+import com.example.mvvmdemo.dataclass.MusicDataClass
 import com.example.mvvmdemo.viewmodel.MusicViewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_music_player.*
-import java.util.concurrent.TimeUnit
-
+import kotlinx.android.synthetic.main.bootmsheet_music_queue.view.*
 class MusicPlayerActivity : AppCompatActivity() {
 
     private var isPlaying: Boolean = false
     private var isPause: Boolean = false
-    private var isStop: Boolean = false
 
     private lateinit var viewModel: MusicViewModel
-    private lateinit var runnable: Runnable
-    private var handler: Handler = Handler()
+
+    private var musicQueueList = arrayListOf<MusicDataClass>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,83 +32,66 @@ class MusicPlayerActivity : AppCompatActivity() {
             music_total_time.text = it.toString()
         }
 
+        //  PLAY-PAUSE BUTTON
         music_play_pause.setOnClickListener {
             if (!isPlaying) {
-                initializeSeekBar()
-                isPlaying = true
-                isStop = false
-                music_stop.isEnabled = true
                 viewModel.playMusic(this)
+                viewModel.initializeSeekBar(music_seekbar, music_current_time)
+                isPlaying = true
                 music_play_pause.setImageResource(R.drawable.baseline_pause_24)
             }
             else if (isPlaying) {
                 isPause = true
                 viewModel.pauseMusic()
-                isStop = false
-                music_stop.isEnabled = true
+                music_next.isEnabled = true
                 isPlaying = false
                 music_play_pause.setImageResource(R.drawable.baseline_play_arrow_24)
             }
             else if (!isPlaying && isPause) {
                 isPlaying = true
-                viewModel.resumeMusic()
-                isStop = false
-                music_stop.isEnabled = true
-                isPause = false
-                music_play_pause.setImageResource(R.drawable.baseline_pause_24)
-            }
-            else if (!isPlaying && isStop) {
-                isPlaying = true
                 viewModel.playMusic(this)
+                music_next.isEnabled = true
                 isPause = false
-                isStop = false
                 music_play_pause.setImageResource(R.drawable.baseline_pause_24)
             }
         }
 
-        music_stop.setOnClickListener {
-            isStop = true
-            isPlaying = false
-            isPause = false
-            viewModel.stopMusic()
-            music_stop.isEnabled = false
-            music_play_pause.setImageResource(R.drawable.baseline_play_arrow_24)
+        //  STOP BUTTON
+        music_next.setOnClickListener {
+
         }
 
-        music_seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                if (p2) {
-                    viewModel.getMediaPlayer().seekTo(p1)
-                }
-            }
-
-            override fun onStartTrackingTouch(p0: SeekBar?) {
-                viewModel.getMediaPlayer().pause()
-            }
-
-            override fun onStopTrackingTouch(p0: SeekBar?) {
-                p0?.progress = viewModel.getMediaPlayer().currentPosition
-                viewModel.getMediaPlayer().start()
-            }
-        })
+        //  QUEUE BUTTON
+        music_queue.setOnClickListener {
+            getMusicQueue()
+        }
     }
 
-    private fun initializeSeekBar() {
-        music_seekbar.max = viewModel.getMediaPlayer().duration / 1000
+    private fun getMusicQueue() {
+        val bottomSheetDialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.bootmsheet_music_queue, null)
+        bottomSheetDialog.setCancelable(true)
+        bottomSheetDialog.setContentView(view)
+        bottomSheetDialog.show()
 
-        runnable = Runnable {
-            music_seekbar.progress = viewModel.getMediaPlayer().currentPosition / 1000
-
-            val currentTime = String.format("%d:%02d",
-                TimeUnit.MILLISECONDS.toMinutes(viewModel.getMediaPlayer().currentPosition.toLong()),
-                TimeUnit.MILLISECONDS.toSeconds(viewModel.getMediaPlayer().currentPosition.toLong()) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(viewModel.getMediaPlayer().currentPosition.toLong()))
-                )
-
-            music_current_time.text = currentTime
-            handler.postDelayed(runnable, 100)
+        musicQueueList = ArrayList<MusicDataClass>()
+        musicQueueList.apply {
+            add(MusicDataClass("Song 1"))
+            add(MusicDataClass("Song 2"))
+            add(MusicDataClass("Song 3"))
+            add(MusicDataClass("Song 4"))
+            add(MusicDataClass("Song 5"))
         }
-        handler.postDelayed(runnable, 100)
+
+        view.recycler_music_queue.apply {
+            layoutManager = LinearLayoutManager(this@MusicPlayerActivity, LinearLayoutManager.VERTICAL, false)
+            adapter =  MusicQueueAdapter(this@MusicPlayerActivity, musicQueueList)
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        }
+
+        viewModel._musicQueueTitle.observe(this) {
+            Log.d("Files", it.toString())
+        }
     }
 
 }
